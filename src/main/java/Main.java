@@ -1,6 +1,5 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -21,9 +20,11 @@ public class Main {
             System.out.print("명령) ");
             String cmd = sc.nextLine();
 
-            if(cmd.equals("exit")){
+            Rq rq = new Rq(cmd);
+
+            if(rq.getUrlPath().equals("exit")){
                 break;
-            }else if(cmd.equals("/user/article/list")){
+            }else if (rq.getUrlPath().equals("/usr/article/list")){
                 System.out.println("- 게시물 리스트 -");
                 System.out.println("--------------------");
                 System.out.println("번호 / 제목");
@@ -33,7 +34,7 @@ public class Main {
                     Article article = articles.get(i);
                     System.out.printf("%d / %s\n", article.id, article.title);
                 }
-            }else if(cmd.equals("/user/article/detail")){
+            }else if (rq.getUrlPath().equals("/usr/article/detail")){
                 if(articles.isEmpty()){
                     System.out.println("게시물이 존재하지 않습니다.");
                     continue;
@@ -45,7 +46,7 @@ public class Main {
                 System.out.printf("번호 : %d\n", article.id);
                 System.out.printf("제목 : %s\n", article.title);
                 System.out.printf("내용 : %s\n", article.body);
-            }else if (cmd.equals("/user/article/write")) {
+            }else if (rq.getUrlPath().equals("/usr/article/write")) {
                 System.out.println("- 게시물 등록 -");
 
                 System.out.printf("제목 : ");
@@ -93,5 +94,51 @@ class Article {
     @Override
     public String toString() {
         return String.format("{id : %d, titld : \"%s\", body : \"%s\"}", id, title, body);
+    }
+}
+
+class Rq{
+    private String url;
+    private String urlPath;
+    private Map<String, String> params;
+
+    Rq(String url){
+        this.url = url;
+        urlPath = Util.getUrlPathFromUrl(this.url);
+        params = Util.getParamsFromUrl(this.url);
+    }
+
+    public Map<String, String> getParams(){
+        return params;
+    }
+
+    public String getUrlPath(){
+        return urlPath;
+    }
+}
+
+class Util {
+    static Map<String, String> getParamsFromUrl(String url) {
+        Map<String, String> params = new HashMap<>();
+        String[] urlBits = url.split("\\?", 2); // '?'기준으로 나눔
+
+        if (urlBits.length == 1) {
+            return params;
+        }
+
+        String queryStr = urlBits[1];
+        for (String bit : queryStr.split("&")) { // '&' 기준으로 나눈 것을 차례대로 bit에 넣음
+            String[] bits = bit.split("=", 2); // '=' 기준으로 나눈것을 bits배열에 넣음
+            if (bits.length == 1) {
+                continue;
+            }
+            params.put(bits[0], bits[1]); // map에 넣음
+        }
+
+        return params;//param 리턴
+    }
+
+    static String getUrlPathFromUrl(String url) {
+        return url.split("\\?", 2)[0]; // '?' 기준으로 나눈 것을 리턴
     }
 }
