@@ -47,4 +47,9 @@ class Article {
     int id;
     String title;
     String body;
+
+    @Override
+    public String toString() {
+        return String.format("{id : %d, titld : \"%s\"}", id, title);
+    }
 }
