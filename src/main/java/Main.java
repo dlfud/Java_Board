@@ -5,9 +5,15 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.println("== 게시판 v 0.1 ==");
         System.out.println("== 프로그램 시작 ==");
-        System.out.println("명령) ");
-        String cmd = sc.nextLine();
-        System.out.printf("입력된 명령어 : %s\n", cmd);
+        while(true) {
+            System.out.println("명령) ");
+            String cmd = sc.nextLine();
+
+            if(cmd.equals("exit")){
+                break;
+            }
+            System.out.printf("입력된 명령어 : %s\n", cmd);
+        }
         System.out.println("== 프로그램 종료 ==");
 
         sc.close();
